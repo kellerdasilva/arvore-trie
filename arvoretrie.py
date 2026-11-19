@@ -1,4 +1,3 @@
-
 # Classe que representa cada nó da Árvore Trie
 class NoTrie:
 
@@ -74,3 +73,36 @@ class Trie:
 
         # Retorna o nó correspondente ao último caractere do prefixo
         return no_atual
+
+    
+    # Método responsável por verificar se uma palavra completa existe na Trie
+    def existe_palavra(self, palavra):
+
+        # Remove espaços nas extremidades e padroniza as letras
+        palavra = palavra.strip().lower()
+
+        # Verifica se a palavra está vazia
+        if palavra == "":
+            return False
+
+        # Começa a busca a partir da raiz
+        no_atual = self.raiz
+
+        # Percorre cada caractere da palavra
+        for caractere in palavra:
+
+            # Se o caractere não existir, a palavra não está cadastrada
+            if caractere not in no_atual.filhos:
+                return False
+
+            # Avança para o próximo nó
+            else:
+                no_atual = no_atual.filhos[caractere]
+
+        # Verifica se o último nó marca o fim de uma palavra
+        if no_atual.eh_fim_de_palavra == True:
+            return True
+
+        else:
+            return False
+
