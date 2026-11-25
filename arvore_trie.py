@@ -14,14 +14,13 @@ class Trie:
     def __init__(self):
         self.raiz = NoTrie()  # Cria o nó raiz da árvore
 
-    # Método responsável por inserir uma palavra na árvore
+    # Insere uma palavra na árvore
     def inserir(self, palavra):
-
         # Remove espaços nas extremidades e padroniza as letras
-        palavra = palavra.strip().lower()
+        palavra = self.normalizar(palavra)
 
-        # Verifica se a palavra está vazia
-        if palavra == "":
+        # Rejeita palavras vazias ou com espaços no meio (a Trie guarda uma palavra por vez)
+        if palavra == "" or len(palavra.split()) > 1:
             return False
 
         # Começa a inserção a partir da raiz
@@ -39,7 +38,7 @@ class Trie:
             no_atual = no_atual.filhos[caractere]
 
         # Verifica se a palavra já estava cadastrada
-        if no_atual.eh_fim_de_palavra == True:
+        if no_atual.eh_fim_de_palavra:
             return False
         else:
             # Marca o último nó como final de uma palavra válida
