@@ -92,6 +92,44 @@ class Trie:
             if limite is not None and len(resultado) >= limite:
                 return
     
+    # Carrega as palavras do arquivo para a Trie
+    def carregar_dicionario(self, caminho="dicionario.txt"):
+        # Se o arquivo não existir, não há nada a carregar
+        if not os.path.exists(caminho):
+            return 0
+
+        # Contador de palavras novas inseridas
+        total = 0
+
+        # Abre o arquivo para leitura
+        with open(caminho, "r", encoding="utf-8") as arquivo:
+
+            # Lê o arquivo linha por linha
+            for linha in arquivo:
+
+                # Normaliza a palavra lida
+                palavra = self.normalizar(linha)
+
+                # Insere na árvore e conta se foi uma palavra nova
+                if self.inserir(palavra) == True:
+                    total += 1
+
+        return total
+    
+    # Salva todas as palavras da Trie no arquivo
+    def salvar_dicionario(self, caminho="dicionario.txt"):
+        # Obtém todas as palavras armazenadas na árvore
+        palavras = self.listar_palavras()
+
+        # Abre o arquivo para escrita (sobrescreve o conteúdo anterior)
+        with open(caminho, "w", encoding="utf-8") as arquivo:
+
+            # Grava uma palavra por linha
+            for palavra in palavras:
+                arquivo.write(palavra + "\n")
+
+        return len(palavras)
+    
     # Lista todas as palavras armazenadas na Trie
     def listar_palavras(self):
         # Lista que receberá as palavras encontradas
@@ -130,3 +168,8 @@ class Trie:
             return True
         else:
             return False
+    
+    # Padroniza uma palavra (sem espaços nas extremidades e em minúsculas)
+    def normalizar(self, palavra):
+        # Remove espaços nas extremidades e converte para minúsculas
+        return palavra.strip().lower()
