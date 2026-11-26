@@ -1,7 +1,7 @@
 # Trabalho de Estruturas de Dados - autocomplemento e aprendizado de palavras com árvore trie
 # Autores: Lucas Keller da Silva e Matheus Soares Ouriques
 
-from arvore_trie import Trie
+from trie import Trie
 
 ARQUIVO = "dicionario.txt"
 
