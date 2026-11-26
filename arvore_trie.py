@@ -1,8 +1,11 @@
+# Trabalho de Estruturas de Dados - autocomplemento e aprendizado de palavras com árvore trie
+# Autores: Lucas Keller da Silva e Matheus Soares Ouriques
+
 import os # Importa o módulo OS da biblioteca padrão do Python
 
 # Classe que representa cada nó da Árvore Trie
 class NoTrie:
-    # Método construtor do nó
+    # Construtor do nó
     def __init__(self):
         self.filhos = {}  # Dicionário que armazena os caracteres seguintes
         self.eh_fim_de_palavra = False  # Indica se o nó termina uma palavra
@@ -10,7 +13,7 @@ class NoTrie:
 
 # Classe responsável pela Árvore Trie
 class Trie:
-    # Método construtor da árvore
+    # Construtor da árvore
     def __init__(self):
         self.raiz = NoTrie()  # Cria o nó raiz da árvore
 
@@ -45,11 +48,10 @@ class Trie:
             no_atual.eh_fim_de_palavra = True
             return True
 
-    # Método responsável por localizar um prefixo na árvore
+    # Localiza um prefixo na árvore
     def buscar_prefixo(self, prefixo):
-
         # Remove espaços nas extremidades e padroniza as letras
-        prefixo = prefixo.strip().lower()
+        prefixo = self.normalizar(prefixo)
 
         # Verifica se o prefixo está vazio
         if prefixo == "":
@@ -71,6 +73,23 @@ class Trie:
         # Retorna o nó correspondente ao último caractere do prefixo
         return no_atual
     
+    # Retorna até 'limite' palavras que começam com o prefixo (ou lista vazia se não houver nenhuma)
+    def autocompletar(self, prefixo, limite=3):
+        # Padroniza o prefixo
+        prefixo = self.normalizar(prefixo)
+
+        # Localiza o nó correspondente ao último caractere do prefixo
+        no_prefixo = self.buscar_prefixo(prefixo)
+
+        # Lista que receberá as sugestões
+        resultado = []
+
+        # Se o prefixo existe, coleta as palavras da subárvore a partir dele
+        if no_prefixo is not None:
+            self._coletar_palavras(no_prefixo, prefixo, resultado, limite)
+
+        return resultado
+    
     # Coleta todas as palavras a partir de um nó (busca em profundidade)
     def _coletar_palavras(self, no, prefixo, resultado, limite=None):
         # Se já atingiu o limite de palavras desejado, interrompe a busca
@@ -78,7 +97,7 @@ class Trie:
             return
 
         # Se o nó atual marca o fim de uma palavra, adiciona o prefixo acumulado ao resultado
-        if no.eh_fim_de_palavra == True:
+        if no.eh_fim_de_palavra:
             resultado.append(prefixo)
 
         # Percorre os filhos em ordem alfabética
@@ -110,7 +129,7 @@ class Trie:
                 palavra = self.normalizar(linha)
 
                 # Insere na árvore e conta se foi uma palavra nova
-                if self.inserir(palavra) == True:
+                if self.inserir(palavra):
                     total += 1
 
         return total
@@ -139,11 +158,10 @@ class Trie:
 
         return resultado
 
-    # Método responsável por verificar se uma palavra completa existe na Trie
+    # Verifica se uma palavra completa existe na Trie
     def existe_palavra(self, palavra):
-
         # Remove espaços nas extremidades e padroniza as letras
-        palavra = palavra.strip().lower()
+        palavra = self.normalizar(palavra)
 
         # Verifica se a palavra está vazia
         if palavra == "":
@@ -163,10 +181,7 @@ class Trie:
                 no_atual = no_atual.filhos[caractere]
 
         # Verifica se o último nó marca o fim de uma palavra
-        if no_atual.eh_fim_de_palavra == True:
-            return True
-        else:
-            return False
+        return no_atual.eh_fim_de_palavra
     
     # Padroniza uma palavra (sem espaços nas extremidades e em minúsculas)
     def normalizar(self, palavra):
